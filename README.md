@@ -1,6 +1,6 @@
 # internal-sending-app
 
-University internal portal for submitting and managing Internal Visit Bus Requests.
+University portal for submitting and managing External Visit Bus Requests.
 
 ## Getting Started
 

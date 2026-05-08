@@ -24,7 +24,7 @@ export default function RequestPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">New Bus Request</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Submit an internal visit bus request for transport department review.
+            Submit an external visit bus request for transport department review.
           </p>
         </div>
         <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">

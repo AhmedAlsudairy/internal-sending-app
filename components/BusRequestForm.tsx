@@ -6,26 +6,20 @@ import { useRequestStore } from '@/lib/store';
 import type { VisitType } from '@/lib/types';
 
 const DEPARTMENTS = [
-  'Faculty of Engineering',
-  'Faculty of Medicine',
-  'Faculty of Science',
-  'Faculty of Arts & Humanities',
-  'Faculty of Business Administration',
-  'Faculty of Computer Science & IT',
-  'Transport Department',
-  'Student Affairs Office',
-  "Registrar's Office",
+  'Finance Department',
+  'Administration Department',
+  'Dean Officer',
 ];
 
 const VISIT_TYPES: VisitType[] = [
-  'Internal Campus Visit',
-  'Field Trip (Internal)',
+  'External Campus Visit',
+  'Field Trip (External)',
   'Academic Event Transfer',
 ];
 
 interface FormState {
   requestTitle: string;
-  sendTo: string;
+  sendTo: string[];
   visitType: VisitType | '';
   destination: string;
   passengerCount: string;
@@ -37,7 +31,7 @@ interface FormState {
 
 const EMPTY_FORM: FormState = {
   requestTitle: '',
-  sendTo: '',
+  sendTo: [],
   visitType: '',
   destination: '',
   passengerCount: '',
@@ -71,6 +65,10 @@ export function BusRequestForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.sendTo.length === 0) {
+      return;
+    }
+
     addRequest({
       senderName: user.name,
       senderDepartment: user.department,
@@ -153,17 +151,25 @@ export function BusRequestForm() {
             </label>
             <select
               required
+              multiple
               value={form.sendTo}
-              onChange={(e) => set('sendTo', e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              onChange={(e) =>
+                set(
+                  'sendTo',
+                  Array.from(e.target.selectedOptions, (option) => option.value)
+                )
+              }
+              className="h-28 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
             >
-              <option value="">Select department…</option>
               {DEPARTMENTS.map((d) => (
                 <option key={d} value={d}>
                   {d}
                 </option>
               ))}
             </select>
+            <p className="mt-1 text-xs text-gray-500">
+              Select one or more departments (hold Ctrl to select multiple).
+            </p>
           </div>
 
           {/* Visit Type */}

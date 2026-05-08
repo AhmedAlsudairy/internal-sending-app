@@ -9,8 +9,8 @@ export interface User {
 }
 
 export type VisitType =
-  | 'Internal Campus Visit'
-  | 'Field Trip (Internal)'
+  | 'External Campus Visit'
+  | 'Field Trip (External)'
   | 'Academic Event Transfer';
 
 export type RequestStatus = 'Pending' | 'Approved' | 'Rejected';
@@ -23,7 +23,7 @@ export interface BusRequest {
   senderEmail: string;
   // Manual fields
   requestTitle: string;
-  sendTo: string;
+  sendTo: string[];
   visitType: VisitType;
   destination: string;
   passengerCount: number;

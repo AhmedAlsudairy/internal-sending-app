@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSession } from '@/lib/session';
 import { useRequestStore } from '@/lib/store';
 import type { VisitType } from '@/lib/types';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 const DEPARTMENTS = [
   'Finance Department',
@@ -57,6 +58,7 @@ export function BusRequestForm() {
   const { addRequest } = useRequestStore();
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [submitted, setSubmitted] = useState(false);
+  const [sendToError, setSendToError] = useState(false);
 
   if (!user) return null;
 
@@ -66,8 +68,10 @@ export function BusRequestForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (form.sendTo.length === 0) {
+      setSendToError(true);
       return;
     }
+    setSendToError(false);
 
     addRequest({
       senderName: user.name,
@@ -149,27 +153,29 @@ export function BusRequestForm() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Send Request To <span className="text-red-500">*</span>
             </label>
-            <select
-              required
-              multiple
+            <MultiSelect
+              options={DEPARTMENTS.map((department) => ({
+                label: department,
+                value: department,
+              }))}
               value={form.sendTo}
-              onChange={(e) =>
-                set(
-                  'sendTo',
-                  Array.from(e.target.selectedOptions, (option) => option.value)
-                )
-              }
-              className="h-28 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-            >
-              {DEPARTMENTS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
+              onValueChange={(values) => {
+                set('sendTo', values);
+                if (values.length > 0) {
+                  setSendToError(false);
+                }
+              }}
+              placeholder="Select departments..."
+              emptyText="No departments found."
+            />
             <p className="mt-1 text-xs text-gray-500">
-              Select one or more departments (hold Ctrl to select multiple).
+              Select one or more departments from the menu.
             </p>
+            {sendToError && (
+              <p className="mt-1 text-xs text-red-600">
+                Please select at least one department.
+              </p>
+            )}
           </div>
 
           {/* Visit Type */}
